@@ -29,7 +29,10 @@ function VideoThumbnailPreview({
   index: number;
   onClick: () => void;
 }) {
+  const [isHovered, setIsHovered] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  const shouldLoad = isActive || isHovered;
 
   const handleLoadedMetadata = () => {
     if (videoRef.current) {
@@ -41,22 +44,29 @@ function VideoThumbnailPreview({
     <button
       type="button"
       onClick={onClick}
-      className={`relative shrink-0 w-24 h-16 rounded-xl overflow-hidden border-2 transition-all bg-slate-950 ${
+      onMouseEnter={() => setIsHovered(true)}
+      className={`relative shrink-0 w-24 h-16 rounded-xl overflow-hidden border-2 transition-all bg-slate-950 group ${
         isActive
           ? "border-brand-500 scale-105 shadow-md shadow-brand-500/30 ring-2 ring-brand-500/50"
           : "border-slate-800 opacity-70 hover:opacity-100 hover:border-slate-600"
       }`}
       aria-label={alt}
     >
-      <video
-        ref={videoRef}
-        src={`${src}#t=0.001`}
-        muted
-        playsInline
-        preload="metadata"
-        onLoadedMetadata={handleLoadedMetadata}
-        className="w-full h-full object-cover pointer-events-none"
-      />
+      {shouldLoad ? (
+        <video
+          ref={videoRef}
+          src={`${src}#t=0.001`}
+          muted
+          playsInline
+          preload="metadata"
+          onLoadedMetadata={handleLoadedMetadata}
+          className="w-full h-full object-cover pointer-events-none"
+        />
+      ) : (
+        <div className="w-full h-full bg-gradient-to-br from-slate-900 to-anthracite-950 flex items-center justify-center">
+          <Play className="w-4 h-4 text-brand-400 group-hover:scale-110 transition-transform" />
+        </div>
+      )}
       <span className="absolute bottom-1 right-1 text-[10px] font-bold bg-black/80 text-white px-1.5 py-0.5 rounded shadow">
         #{index + 1}
       </span>
