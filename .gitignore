@@ -1,4 +1,4 @@
-﻿node_modules/
+node_modules/
 .next/
 .env
 .env.local
@@ -6,5 +6,3 @@
 .DS_Store
 Thumbs.db
 *.zip
-public/videos/
-public/images/
